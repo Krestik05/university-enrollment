@@ -100,6 +100,6 @@ class EnrollmentServiceTest {
 
         enrollmentService.enroll(student1, 1);
 
-        assertEquals(999, enrollmentService.getAvailableSlots(1)); // intentional failure LR4
+        assertEquals(2, enrollmentService.getAvailableSlots(1));
     }
 }
