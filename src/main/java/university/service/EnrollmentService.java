@@ -77,4 +77,14 @@ public class EnrollmentService {
         notificationService.notifyStudent(enrollment.getStudent().getEmail(),
                 "Ваша запись на курс '" + course.getTitle() + "' отменена");
     }
+
+    /**
+     * ЛР4 / вариант 6: сколько свободных мест осталось на курсе.
+     */
+    public int getAvailableSlots(int courseId) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Курс с id=" + courseId + " не найден"));
+        return course.getMaxStudents() - course.getEnrolledCount();
+    }
 }
