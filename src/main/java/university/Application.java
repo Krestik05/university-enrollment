@@ -13,6 +13,7 @@ import university.service.EnrollmentService;
 
 import java.util.Scanner;
 
+/** LR4 auto-poll marker */
 public class Application {
 
     public static void main(String[] args) {
