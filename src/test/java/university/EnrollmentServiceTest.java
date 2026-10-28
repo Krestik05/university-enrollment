@@ -66,7 +66,7 @@ class EnrollmentServiceTest {
 
     @Test
     void netSvobodnyhMest() {
-        Course smallCourse = new Course(2, "Мини-курс", "Сидоров С.С.", 1);
+        Course smallCourse = new Course(2, "Мини-курс", "Сидоров С.С.",0);
         courseRepository.save(smallCourse);
 
         enrollmentService.enroll(student1, 2);

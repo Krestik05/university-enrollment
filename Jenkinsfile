@@ -13,7 +13,6 @@ pipeline {
             }
             post {
                 always {
-                    // Variant 6: publish JUnit results in Jenkins UI
                     junit 'target/surefire-reports/*.xml'
                 }
             }
