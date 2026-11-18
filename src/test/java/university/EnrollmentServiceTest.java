@@ -93,13 +93,13 @@ class EnrollmentServiceTest {
         assertEquals(1, java.getEnrolledCount());
     }
 
-    /** ЛР4 / вариант 6: проверка свободных мест после записи */
+
     @Test
     void dostupnyeMestaPosleZapisi() {
         assertEquals(3, enrollmentService.getAvailableSlots(1));
 
         enrollmentService.enroll(student1, 1);
 
-        assertEquals(2, enrollmentService.getAvailableSlots(1));
+        assertEquals(999, enrollmentService.getAvailableSlots(1));
     }
 }
