@@ -7,14 +7,25 @@ pipeline {
                 bat 'C:\\maven\\bin\\mvn.cmd compile'
             }
         }
+        stage('Static Analysis') {
+            steps {
+                bat 'C:\\maven\\bin\\mvn.cmd checkstyle:check'
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'target/checkstyle-result.xml', allowEmptyArchive: true
+                }
+            }
+        }
         stage('Test') {
             steps {
                 bat 'C:\\maven\\bin\\mvn.cmd test'
             }
             post {
                 always {
-                    // Variant 6: publish JUnit results in Jenkins UI
+
                     junit 'target/surefire-reports/*.xml'
+                    archiveArtifacts artifacts: 'target/logs/*.log', allowEmptyArchive: true
                 }
             }
         }

@@ -12,7 +12,11 @@ import university.repository.InMemoryCourseRepository;
 import university.repository.InMemoryEnrollmentRepository;
 import university.service.EnrollmentService;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class EnrollmentServiceTest {
 

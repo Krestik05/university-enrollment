@@ -1,5 +1,7 @@
 package university.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import university.model.Course;
 import university.model.Enrollment;
 import university.model.Student;
@@ -10,6 +12,7 @@ import university.repository.EnrollmentRepository;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class EnrollmentService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(EnrollmentService.class);
 
     private final CourseRepository courseRepository;
     private final EnrollmentRepository enrollmentRepository;
@@ -26,21 +29,26 @@ public class EnrollmentService {
 
     public Enrollment enroll(Student student, int courseId) {
         if (student == null) {
+            LOGGER.error("Enrollment failed: student is null, courseId={}", courseId);
             throw new IllegalArgumentException("Студент не может быть null");
         }
 
         Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Курс с id=" + courseId + " не найден"));
+                .orElseThrow(() -> {
+                    LOGGER.error("Course not found: courseId={}, studentId={}", courseId, student.getId());
+                    return new IllegalArgumentException("Курс с id=" + courseId + " не найден");
+                });
 
         enrollmentRepository.findActiveByStudentAndCourse(student.getId(), courseId)
                 .ifPresent(existing -> {
+                    LOGGER.warn("Student already enrolled: studentId={}, courseId={}", student.getId(), courseId);
                     throw new IllegalStateException(
                             "Студент '" + student.getName()
                                     + "' уже записан на курс '" + course.getTitle() + "'");
                 });
 
         if (!course.hasFreeSlots()) {
+            LOGGER.warn("No available slots: courseId={}, studentId={}", courseId, student.getId());
             throw new IllegalStateException(
                     "На курсе '" + course.getTitle() + "' нет свободных мест");
         }
@@ -51,6 +59,8 @@ public class EnrollmentService {
         course.incrementEnrolled();
         courseRepository.update(course);
         enrollmentRepository.save(enrollment);
+        LOGGER.info("Enrollment created: enrollmentId={}, studentId={}, courseId={}",
+                enrollment.getId(), student.getId(), courseId);
 
         notificationService.notifyStudent(student.getEmail(),
                 "Вы успешно записаны на курс '" + course.getTitle() + "'");
@@ -73,14 +83,13 @@ public class EnrollmentService {
         Course course = enrollment.getCourse();
         course.decrementEnrolled();
         courseRepository.update(course);
+        LOGGER.info("Enrollment cancelled: enrollmentId={}, courseId={}", enrollmentId, course.getId());
 
         notificationService.notifyStudent(enrollment.getStudent().getEmail(),
                 "Ваша запись на курс '" + course.getTitle() + "' отменена");
     }
 
-    /**
-     * ЛР4 / вариант 6: сколько свободных мест осталось на курсе.
-     */
+
     public int getAvailableSlots(int courseId) {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new IllegalArgumentException(
