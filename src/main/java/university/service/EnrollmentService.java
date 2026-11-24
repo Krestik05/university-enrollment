@@ -11,7 +11,6 @@ import university.repository.EnrollmentRepository;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-// LR5 Checkstyle demonstration: this deliberately long comment exceeds the configured maximum line length of 120 characters while leaving the enrollment business logic unchanged.
 public class EnrollmentService {
     private static final Logger LOGGER = LoggerFactory.getLogger(EnrollmentService.class);
 
